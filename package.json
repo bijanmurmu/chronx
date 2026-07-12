@@ -1,0 +1,26 @@
+{
+  "name": "chronx",
+  "version": "1.0.0",
+  "description": "Continuous, invisible Undo button for your local file system",
+  "bin": {
+    "chronx": "target/release/chronx.exe"
+  },
+  "scripts": {
+    "build": "cargo build --release",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "rust",
+    "git",
+    "undo",
+    "history",
+    "daemon"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/chronx.git"
+  }
+}

@@ -1,0 +1,6 @@
+/target/
+/.chronx/
+/.chronx_global/
+**/*.rs.bk
+node_modules/
+npm-debug.log
