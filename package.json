@@ -1,13 +1,12 @@
 {
-  "name": "chronx",
+  "name": "@bijanmurmu/chronx",
   "version": "1.0.0",
   "description": "Continuous, invisible Undo button for your local file system",
   "bin": {
-    "chronx": "target/release/chronx.exe"
+    "chronx": "run.js"
   },
   "scripts": {
-    "build": "cargo build --release",
-    "prepublishOnly": "npm run build"
+    "postinstall": "node install.js"
   },
   "keywords": [
     "cli",

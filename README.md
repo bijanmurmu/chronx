@@ -8,7 +8,7 @@
 
 **Via NPM:**
 ```bash
-npm install -g chronx
+npm install -g @bijanmurmu/chronx
 ```
 
 **Via Cargo (Rust):**
