@@ -7,7 +7,7 @@ Thank you for your interest in improving `chronx`! We want to make contributing 
 1. **Install Rust:** If you don't have Rust installed, get it from [rustup.rs](https://rustup.rs/).
 2. **Clone the Repo:** 
    ```bash
-   git clone https://github.com/yourusername/chronx.git
+   git clone https://github.com/bijanmurmu/chronx.git
    cd chronx
    ```
 3. **Test the Daemon Locally:**
