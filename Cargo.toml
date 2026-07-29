@@ -1,6 +1,6 @@
 [package]
 name = "chronx"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 description = "Continuous, invisible Undo button for your local file system"
 license = "MIT"
@@ -15,6 +15,8 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 chrono = "0.4"
 directories = "5.0"
+dialoguer = "0.12.0"
+console = "0.16.4"
 
 [profile.release]
 opt-level = 3       # Maximize speed
@@ -22,3 +24,6 @@ lto = true          # Link Time Optimization (smaller, faster binary)
 codegen-units = 1   # Maximize optimization across all crates
 strip = true        # Strip symbols to make the binary tiny
 panic = "abort"     # Remove panic unwinding code to save space
+
+[dev-dependencies]
+tempfile = "3.10"

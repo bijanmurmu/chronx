@@ -1,6 +1,6 @@
 {
   "name": "@bijanmurmu/chronx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Continuous, invisible Undo button for your local file system",
   "bin": {
     "chronx": "run.js"

@@ -1,5 +1,7 @@
 use std::env;
+#[allow(unused_imports)]
 use std::fs;
+#[allow(unused_imports)]
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -78,5 +80,5 @@ Comment=Chronx Background Daemon
         fs::write(desktop_path, desktop_content).unwrap();
     }
 
-    println!("✅ Chronx daemon installed to run on system startup!");
+    println!("Chronx daemon installed to run on system startup!");
 }

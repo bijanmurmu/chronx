@@ -2,7 +2,7 @@
 
 > The invisible, zero-config "Undo" button for your local file system.
 
-`chronx` is a global background daemon written in Rust. It silently records every file save, letting you rewind time if you accidentally break your code between Git commits.
+`chronx` is a global background daemon written in Rust. It silently records everything you do—including file creations, deletions, saves, and copied files across your local machine. This lets you effortlessly rewind time and recover any file, whether you've accidentally broken your code between Git commits or simply lost a file you were working on.
 
 ## 🚀 Install
 
