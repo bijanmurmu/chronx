@@ -77,6 +77,71 @@ pub fn start_watching_single(dir: PathBuf) {
     let _ = std::io::stdin().read_line(&mut buf);
 }
 
+pub fn start_watching_single_thread(dir: PathBuf) {
+    std::thread::spawn(move || {
+        let chronx_dir = dir.join(".chronx");
+        let history_dir = chronx_dir.join("history");
+        fs::create_dir_all(&history_dir).unwrap_or(());
+
+        let mut watcher = notify::recommended_watcher(move |res: notify::Result<notify::Event>| {
+            match res {
+                Ok(event) => {
+                    let is_modify = event.kind.is_modify();
+                    let is_create = event.kind.is_create();
+                    let is_remove = event.kind.is_remove();
+                    
+                    if is_modify || is_create || is_remove {
+                        for path in event.paths {
+                            let path_str = path.to_string_lossy();
+                            if path_str.contains(".chronx") || path_str.contains(".git") || path_str.contains("target") || path_str.contains("node_modules") {
+                                continue;
+                            }
+
+                            let event_type = if is_create {
+                                "create"
+                            } else if is_remove {
+                                "remove"
+                            } else {
+                                "modify"
+                            };
+
+                            if path.is_file() || is_remove {
+                                let content = if is_remove {
+                                    String::from("<DELETED>")
+                                } else {
+                                    fs::read_to_string(&path).unwrap_or_default()
+                                };
+
+                                let timestamp = Utc::now().to_rfc3339().replace(":", "-");
+                                let file_name = path.file_name().unwrap_or_default().to_string_lossy();
+                                
+                                let snapshot = Snapshot {
+                                    timestamp: timestamp.clone(),
+                                    path: path_str.to_string(),
+                                    content,
+                                    event_type: event_type.to_string(),
+                                };
+                                
+                                let out_path = history_dir.join(format!("{}_{}_{}.json", timestamp, event_type, file_name));
+                                let json = serde_json::to_string(&snapshot).unwrap_or_default();
+                                let _ = fs::write(out_path, json);
+                            }
+                        }
+                    }
+                },
+                Err(_) => {},
+            }
+        }).unwrap();
+
+        watcher.watch(&dir, RecursiveMode::Recursive).unwrap();
+
+        // Loop forever so the watcher is not dropped
+        loop {
+            std::thread::sleep(std::time::Duration::from_secs(1));
+        }
+    });
+}
+
 pub fn start_global_daemon() {
     let mut watcher = notify::recommended_watcher(move |res: notify::Result<notify::Event>| {
         match res {

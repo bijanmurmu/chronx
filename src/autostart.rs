@@ -11,7 +11,6 @@ pub fn enable_autostart() {
 
     #[cfg(target_os = "windows")]
     {
-        println!("Installing Windows autostart registry key...");
         Command::new("reg")
             .args([
                 "add",
@@ -30,7 +29,6 @@ pub fn enable_autostart() {
 
     #[cfg(target_os = "macos")]
     {
-        println!("Installing macOS LaunchAgent...");
         let plist_content = format!(
             r#"<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -60,7 +58,6 @@ pub fn enable_autostart() {
 
     #[cfg(target_os = "linux")]
     {
-        println!("Installing Linux autostart desktop entry...");
         let desktop_content = format!(
             r#"[Desktop Entry]
 Type=Application
@@ -79,6 +76,40 @@ Comment=Chronx Background Daemon
         let desktop_path = autostart_dir.join("chronx.desktop");
         fs::write(desktop_path, desktop_content).unwrap();
     }
+}
 
-    println!("Chronx daemon installed to run on system startup!");
+pub fn disable_autostart() {
+    #[cfg(target_os = "windows")]
+    {
+        let _ = Command::new("reg")
+            .args([
+                "delete",
+                "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                "/v",
+                "ChronxDaemon",
+                "/f",
+            ])
+            .output();
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let home = std::env::var("HOME").unwrap();
+        let plist_path = PathBuf::from(home).join("Library/LaunchAgents/com.chronx.daemon.plist");
+        if plist_path.exists() {
+            let _ = Command::new("launchctl")
+                .args(["unload", plist_path.to_str().unwrap()])
+                .output();
+            let _ = fs::remove_file(plist_path);
+        }
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let home = std::env::var("HOME").unwrap();
+        let desktop_path = PathBuf::from(home).join(".config/autostart/chronx.desktop");
+        if desktop_path.exists() {
+            let _ = fs::remove_file(desktop_path);
+        }
+    }
 }
